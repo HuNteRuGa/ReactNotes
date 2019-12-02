@@ -1,11 +1,22 @@
 import React, { Component } from "react";
+import { Switch, Route, Link } from "react-router-dom";
+
+import Guestpage from "./Guestpage/Guestpage";
+import Homepage from "./Homepage/Homepage";
 
 class App extends Component {
   render() {
     return (
       <>
-        <h3>Loading...</h3>
-        <h4>Loaded!!!</h4>
+        <Switch>
+          <Route exact path="/" component={Guestpage} />
+          <Route path="/homepage" component={Homepage} />
+        </Switch>
+        <h4>Pages:</h4>
+        <nav style={{ display: "flex", flexDirection: "column" }}>
+          <Link to="/">Guest</Link>
+          <Link to="/homepage">Home</Link>
+        </nav>
       </>
     );
   }
