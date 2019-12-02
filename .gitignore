@@ -2,7 +2,4 @@
 /.vscode
 /.idea
 
-# Personal config
-# /web/server/config/config.json
-
-/src/public/static
+/dist
