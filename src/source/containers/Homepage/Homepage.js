@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import App from "../components/App";
+import Homepage from "../../components/Homepage/Homepage";
 
 const mapStateToProps = state => ({
   accounts: state.accounts
@@ -8,5 +8,5 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-const store = connect(mapStateToProps, mapDispatchToProps)(App);
+const store = connect(mapStateToProps, mapDispatchToProps)(Homepage);
 export default store;

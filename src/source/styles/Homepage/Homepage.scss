@@ -1,0 +1,68 @@
+@import "../utils/vars.scss";
+@import "../utils/mixins.scss";
+
+.left-menu {
+  @include posf;
+  @include pos0;
+  @include shadow;
+  @include flex-column;
+  @include flex-start-center;
+  width: 80px;
+  height: 100%;
+  background: $backgroundColor;
+  z-index: 10000;
+
+  &__avatar {
+    @include round;
+    @include square(60px);
+    margin: 30px 0 20px 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    @include shadow;
+  }
+
+  &__links {
+    @include posr;
+    @include m20;
+    @include flex-column;
+    @include flex-start;
+    width: 100%;
+
+    &__one-link {
+      @include default-link;
+      @include square(80px);
+      @include m5;
+      @include posr;
+      display: block;
+      text-align: center;
+      line-height: 60px;
+      background-color: $backgroundColor;
+      background-position: center center;
+      background-size: 54px 54px;
+      background-repeat: no-repeat;
+      transition: 250ms;
+
+      &:hover {
+        background-color: rgb(200, 200, 200);
+      }
+
+      &__submenu {
+        @include posa;
+        @include shadow;
+        @include menu-font;
+        left: 100%;
+        top: 0px;
+        width: 170px;
+        padding: 26.5px 10px;
+        background: $backgroundColor;
+        display: none;
+      }
+
+      &:hover &__submenu {
+        animation: show 250ms ease-in-out;
+        display: block;
+      }
+    }
+  }
+}

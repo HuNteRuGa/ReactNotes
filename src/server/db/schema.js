@@ -1,27 +1,5 @@
 const postgres = require("./index");
 
-function decode(elems, columns) {
-  elems.forEach((elem, index) => {
-    for (key in elem) {
-      if (columns[key] && columns[key].type == "string") {
-        elems[index][key] = elems[index][key].replace(/%_1/gi, "'");
-      }
-    }
-  });
-  return elems;
-}
-
-function encode(elems, columns) {
-  elems.forEach((elem, index) => {
-    for (key in elem) {
-      if (columns[key] && columns[key].type == "string") {
-        elems[index][key] = elems[index][key].replace(/'/gi, "%_1");
-      }
-    }
-  });
-  return elems;
-}
-
 function getWhere(find, columns) {
   let where = false;
 
@@ -65,10 +43,12 @@ module.exports = class {
     if (!params.limit || typeof params.limit != "number") params.limit = 50;
     if (!params.start || typeof params.start != "number") params.start = 0;
 
-    if (!params.order || typeof params.order != "string" || !this.columns[params.order]) params.order = "id";
+    if (!params.order || typeof params.order != "string" || !this.columns[params.order])
+      params.order = "id";
     if (params.desc == "true") params.desc = true;
     if (params.desc == "false") params.desc = false;
-    if ((!params.desc && params.desc !== false) || typeof params.desc != "boolean") params.desc = true;
+    if ((!params.desc && params.desc !== false) || typeof params.desc != "boolean")
+      params.desc = true;
 
     let col = "";
     if (!params.columns || params.columns.length == 0) col = "*";
@@ -91,11 +71,12 @@ module.exports = class {
       throw 0;
     }
 
-    const sql = `SELECT ${col} FROM ${this.table} ${where ? where : ``} ORDER BY ${params.order}${params.desc ? " DESC" : ""} OFFSET ${params.start} LIMIT ${params.limit}`;
+    const sql = `SELECT ${col} FROM ${this.table} ${where ? where : ``} ORDER BY ${params.order}${
+      params.desc ? " DESC" : ""
+    } OFFSET ${params.start} LIMIT ${params.limit}`;
     try {
       let res = await postgres(sql);
-      res = decode(res, this.columns);
-      if (this.get && typeof this.get == "function") res = this.get(res);
+      if (this.get && typeof this.get == "function") res = res.map(value => this.get(value));
       return res;
     } catch (err) {
       consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
@@ -108,11 +89,11 @@ module.exports = class {
     let columns = false;
     let values = false;
 
-    params = encode([params], this.columns)[0];
-
     for (let key in this.columns) {
       if (this.columns[key].required && !params[key]) {
-        consoleError(`\`${key}\` is \x1b[31mREQUIRED\x1b[0m to insert to the table \`${this.table}\``);
+        consoleError(
+          `\`${key}\` is \x1b[31mREQUIRED\x1b[0m to insert to the table \`${this.table}\``
+        );
         throw 0;
       } else {
         if (typeof params[key] == this.columns[key].type) {
@@ -186,7 +167,6 @@ module.exports = class {
       throw 0;
     }
 
-    params.set = encode([params.set], this.columns)[0];
     let set = false;
     for (let key in params.set) {
       if (this.columns[key]) {
@@ -194,7 +174,9 @@ module.exports = class {
           if (set) {
             set += ", ";
           } else set = "";
-          set += `${key}=${this.columns[key].type == "string" ? `'${params.set[key]}'` : params.set[key]}`;
+          set += `${key}=${
+            this.columns[key].type == "string" ? `'${params.set[key]}'` : params.set[key]
+          }`;
         } else {
           consoleError(`"${typeof params.set[key]}" is not required type of column \`${key}\``);
           throw 0;
@@ -233,6 +215,16 @@ module.exports = class {
             id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 999999999 CACHE 1 ),
             ${columns}CONSTRAINT ${this.table}_pkey PRIMARY KEY (id)
         )`;
+    try {
+      await postgres(sql);
+      return 0;
+    } catch (err) {
+      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
+      throw 0;
+    }
+  }
+  async drop() {
+    const sql = `DROP TABLE ${this.table}`;
     try {
       await postgres(sql);
       return 0;

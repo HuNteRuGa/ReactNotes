@@ -52,6 +52,7 @@ services:
       - ./.env
     volumes:
       - "${PROJECT_ROOT}/docker/nginx/${NGINX_MODE}:/etc/nginx/conf.d"
+      - "${PROJECT_ROOT}/dist:/app/dist"
     depends_on:
       - webapp
     links:

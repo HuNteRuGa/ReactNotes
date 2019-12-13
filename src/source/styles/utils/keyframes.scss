@@ -1,0 +1,17 @@
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opcity: 1;
+  }
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

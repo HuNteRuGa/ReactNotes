@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
   port: 8081,
   postgres: {
     url: "db",
@@ -8,5 +8,3 @@ const config = {
     password: process.env.POSTGRES_PASSWORD
   }
 };
-
-module.exports = config;

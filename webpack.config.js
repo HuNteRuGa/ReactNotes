@@ -18,7 +18,7 @@ module.exports = {
   },
 
   entry: {
-    main: [`${PATHS.src}/main.js`]
+    main: ["@babel/polyfill", `${PATHS.src}/main.js`]
   },
   output: {
     filename: `${PATHS.assets}/js/[name].js`,

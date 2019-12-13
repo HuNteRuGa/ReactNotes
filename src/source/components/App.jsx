@@ -1,22 +1,25 @@
 import React, { Component } from "react";
-import { Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
-import Guestpage from "./Guestpage/Guestpage";
-import Homepage from "./Homepage/Homepage";
+import Guestpage from "../containers/Guestpage/Guestpage";
+import Homepage from "../containers/Homepage/Homepage";
+
+import "../styles/main.scss";
 
 class App extends Component {
   render() {
     return (
       <>
         <Switch>
-          <Route exact path="/" component={Guestpage} />
-          <Route path="/homepage" component={Homepage} />
+          <Route
+            path="/"
+            component={
+              this.props.accounts.jwt.signature && this.props.accounts.jwt.data
+                ? Homepage
+                : Guestpage
+            }
+          />
         </Switch>
-        <h4>Pages:</h4>
-        <nav style={{ display: "flex", flexDirection: "column" }}>
-          <Link to="/">Guest</Link>
-          <Link to="/homepage">Home</Link>
-        </nav>
       </>
     );
   }

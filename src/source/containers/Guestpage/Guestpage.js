@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import Signin from "../../components/Guestpage/Signin";
+import Guestpage from "../../components/Guestpage/Guestpage";
 import { inputSigninPassword, inputSigninUsername, signin } from "../../actions/accounts";
 
 const mapStateToProps = state => ({
@@ -19,5 +19,5 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const store = connect(mapStateToProps, mapDispatchToProps)(Signin);
+const store = connect(mapStateToProps, mapDispatchToProps)(Guestpage);
 export default store;

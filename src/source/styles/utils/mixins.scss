@@ -1,0 +1,223 @@
+@mixin textFont {
+  color: $textColor;
+  font: 17px $textFont;
+}
+
+@mixin errorFont {
+  color: $errorColor;
+  font: 17px $errorFont;
+}
+
+@mixin menu-font {
+  color: $textColor;
+  font: 22px $menuFont;
+}
+
+@mixin posr {
+  position: relative;
+}
+
+@mixin posa {
+  position: absolute;
+}
+
+@mixin posf {
+  position: fixed;
+}
+
+@mixin shadow {
+  box-shadow: 0 0 15px rgba(140, 140, 140, 0.3);
+}
+
+@mixin round {
+  border-radius: 50%;
+}
+
+@mixin default-input {
+  background: $backgroundColor;
+  padding: 0 25px;
+  border: none;
+  outline: none;
+  font: 18px $inputFont;
+  color: $textColor;
+  height: 50px;
+}
+
+@mixin transparent-button {
+  border: solid 2px $primaryColor;
+  color: $primaryColor;
+  font: 20px $buttonFont;
+  height: 50px;
+  transition: 350ms;
+  background: transparent;
+  outline: none !important;
+  cursor: pointer;
+  &:hover {
+    color: $backgroundColor;
+    background: $primaryColor;
+  }
+}
+
+@mixin default-link {
+  text-decoration: none;
+  cursor: pointer;
+  color: $linkColor;
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-start {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+@mixin flex-center {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@mixin flex-center-center {
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-start-center {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@mixin flex-between {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@mixin flex-around {
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+@mixin no-wrap {
+  flex-wrap: no-wrap;
+}
+
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin s100 {
+  width: 100%;
+  height: 100%;
+}
+
+@mixin pos0 {
+  left: 0px;
+  top: 0px;
+}
+
+@mixin b5 {
+  border-radius: 5px;
+}
+
+@mixin b18 {
+  border-radius: 18px;
+}
+
+@mixin borders-left($radius) {
+  border-top-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+
+@mixin borders-right($radius) {
+  border-top-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+
+@mixin elem {
+  content: "";
+  display: block;
+}
+
+@mixin m5 {
+  margin: 5px 0;
+}
+
+@mixin m10 {
+  margin: 10px 0;
+}
+
+@mixin m12 {
+  margin: 12px 0;
+}
+
+@mixin m20 {
+  margin: 20px 0;
+}
+
+@mixin h1 {
+  font: 72px $headerFont;
+  color: $headerColor;
+}
+
+@mixin h2 {
+  font: 64px $headerFont;
+  color: $headerColor;
+}
+
+@mixin h3 {
+  font: 48px $headerFont;
+  color: $headerColor;
+}
+
+@mixin h4 {
+  font: 42px $headerFont;
+  color: $headerColor;
+}
+
+@mixin h5 {
+  font: 36px $headerFont;
+  color: $headerColor;
+}
+
+@mixin h6 {
+  font: 32px $headerFont;
+  color: $headerColor;
+}
+
+@mixin sh1 {
+  font: 48px $subheaderFont;
+  color: $headerColor;
+}
+
+@mixin sh2 {
+  font: 42px $subheaderFont;
+  color: $headerColor;
+}
+
+@mixin sh3 {
+  font: 36px $subheaderFont;
+  color: $headerColor;
+}
+
+@mixin sh4 {
+  font: 32px $subheaderFont;
+  color: $headerColor;
+}
+
+@mixin sh5 {
+  font: 26px $subheaderFont;
+  color: $headerColor;
+}
+
+@mixin sh6 {
+  font: 22px $subheaderFont;
+  color: $headerColor;
+}
