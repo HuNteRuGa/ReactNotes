@@ -1,9 +1,9 @@
-@mixin textFont {
+@mixin text-font {
   color: $textColor;
   font: 17px $textFont;
 }
 
-@mixin errorFont {
+@mixin error-font {
   color: $errorColor;
   font: 17px $errorFont;
 }
@@ -104,6 +104,10 @@
   align-items: flex-start;
 }
 
+@mixin flex-wrap {
+  flex-wrap: wrap;
+}
+
 @mixin no-wrap {
   flex-wrap: no-wrap;
 }
@@ -125,6 +129,10 @@
 
 @mixin b5 {
   border-radius: 5px;
+}
+
+@mixin b10 {
+  border-radius: 10px;
 }
 
 @mixin b18 {
@@ -160,6 +168,14 @@
 
 @mixin m20 {
   margin: 20px 0;
+}
+
+@mixin p5 {
+  padding: 5px;
+}
+
+@mixin p20 {
+  padding: 20px;
 }
 
 @mixin h1 {

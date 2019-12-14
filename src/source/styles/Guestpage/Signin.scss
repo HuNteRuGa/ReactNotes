@@ -33,7 +33,7 @@
     }
 
     &__text {
-      @include textFont;
+      @include text-font;
       @include m10;
       width: 350px;
 
@@ -69,7 +69,7 @@
 
         &__content {
           @include posa;
-          @include errorFont;
+          @include error-font;
           @include shadow;
           @include borders-right(20px);
           transform: translate(0 calc(20px - 50%));

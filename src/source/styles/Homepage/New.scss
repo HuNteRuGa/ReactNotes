@@ -1,0 +1,41 @@
+@import "../utils/vars.scss";
+@import "../utils/mixins.scss";
+
+.new-project {
+  @include posr;
+  @include flex-column;
+  @include flex-start-center;
+  width: 600px;
+  height: calc(100vh - 80px);
+  padding: 40px 0;
+  margin: 0px 40px;
+
+  &__h3 {
+    @include h4;
+  }
+
+  &__input {
+    @include default-input;
+    @include shadow;
+    @include b10;
+    @include m20;
+    width: 440px;
+  }
+
+  &__textarea {
+    @include default-input;
+    @include shadow;
+    @include b10;
+    resize: none;
+    height: 80px;
+    padding: 15px 20px;
+    width: 450px;
+  }
+
+  &__button {
+    @include transparent-button;
+    @include m20;
+    @include b18;
+    width: 150px;
+  }
+}

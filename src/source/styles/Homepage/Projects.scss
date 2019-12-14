@@ -1,0 +1,85 @@
+@import "../utils/vars.scss";
+@import "../utils/mixins.scss";
+
+.project-list {
+  @include posr;
+  @include flex-column;
+  width: 540px;
+  height: calc(100vh - 80px);
+  padding: 40px 20px;
+  margin: 0 0 0 120px;
+  overflow: auto;
+
+  &__h1 {
+    @include h2;
+    @include m5;
+  }
+}
+
+.one-project {
+  @include posr;
+  @include flex-column;
+  @include flex-start;
+  @include flex-wrap;
+  @include shadow;
+  @include b5;
+  @include m20;
+  width: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &__title {
+    @include h6;
+    margin: 20px 20px 0 20px;
+  }
+
+  &__project-cards {
+    @include posr;
+    @include flex-row;
+    @include flex-between;
+    width: calc(100% - 40px);
+    margin: 0 20px 10px 20px;
+  }
+
+  &__open {
+    @include default-link;
+    @include flex-row;
+    @include flex-center-center;
+    width: 100%;
+    height: 50px;
+    font: 24px $buttonFont;
+    color: $backgroundColor;
+    background: $primaryColor;
+  }
+}
+
+.one-card {
+  @include posr;
+  @include flex-column;
+  @include flex-start;
+  width: calc(100% / 3 - 15px);
+  padding: 10px 20px;
+
+  &__header {
+    @include sh6;
+    @include m5;
+    font: 19px $headerFont;
+  }
+
+  &__task {
+    @include posr;
+    font: 15px $textFont;
+    margin: 2px 0 2px 14px;
+
+    &:before {
+      @include elem;
+      @include posa;
+      @include square(7px);
+      @include round;
+      @include shadow;
+      background: $textColor;
+      left: -12px;
+      top: 6px;
+    }
+  }
+}
