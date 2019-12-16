@@ -3,6 +3,11 @@
   font: 17px $textFont;
 }
 
+@mixin big-text-font {
+  color: $textColor;
+  font: 22px $textFont;
+}
+
 @mixin error-font {
   color: $errorColor;
   font: 17px $errorFont;
@@ -43,6 +48,40 @@
   height: 50px;
 }
 
+@mixin underline-input {
+  background: $backgroundColor;
+  outline: none;
+  font: 18px $inputFont;
+  color: $textColor;
+  height: 40px;
+  border: none;
+  border-bottom: solid 2px rgb(180, 180, 180);
+  transition: 250ms;
+
+  &:focus {
+    border-bottom: solid 2px $primaryColor;
+  }
+}
+
+@mixin underline-textarea {
+  background: $backgroundColor;
+  outline: none;
+  overflow-x: hidden;
+  overflow-y: visible;
+  font: 18px $inputFont;
+  color: $textColor;
+  height: auto;
+  padding: 15px 0 10px 0;
+  border: none;
+  border-bottom: solid 2px rgb(180, 180, 180);
+  transition: 250ms;
+  resize: none;
+
+  &:focus {
+    border-bottom: solid 2px $primaryColor;
+  }
+}
+
 @mixin transparent-button {
   border: solid 2px $primaryColor;
   color: $primaryColor;
@@ -52,10 +91,58 @@
   background: transparent;
   outline: none !important;
   cursor: pointer;
+
   &:hover {
     color: $backgroundColor;
     background: $primaryColor;
   }
+}
+
+@mixin default-button {
+  @include posr;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  outline: none !important;
+  color: $textButtonColor;
+  background-color: $primaryColor;
+  cursor: pointer;
+  height: 50px;
+  transition: 350ms;
+  font: 20px/50px $buttonFont;
+  overflow: hidden;
+
+  &::after {
+    @include elem;
+    @include posa;
+    width: 500px;
+    height: 500px;
+    left: -455px;
+    top: -300px;
+    background-color: transparent;
+    background-image: radial-gradient(
+      circle,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 60%,
+      transparent 60%
+    );
+  }
+
+  &:hover::after {
+    transition: 350ms linear;
+    left: -150px;
+    background-image: radial-gradient(
+      circle,
+      transparent 50%,
+      rgba(255, 255, 255, 0.3) 70%,
+      transparent 70%
+    );
+  }
+
+  // &:hover::after {
+  //   left: -200px;
+  // }
 }
 
 @mixin default-link {
@@ -97,11 +184,13 @@
 @mixin flex-between {
   justify-content: space-between;
   align-items: flex-start;
+  align-content: flex-start;
 }
 
 @mixin flex-around {
   justify-content: space-around;
   align-items: flex-start;
+  align-content: flex-start;
 }
 
 @mixin flex-wrap {

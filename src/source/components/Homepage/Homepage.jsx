@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import Notes from "./Notes/Notes";
-import New from "./Notes/New";
+import New from "../../containers/Homepage/New";
 import Menu from "./Menu/Menu";
 
 import "../../styles/Homepage/Homepage.scss";

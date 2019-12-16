@@ -1,9 +1,11 @@
 @import "./utils/reset.scss";
 @import "./utils/keyframes.scss";
 @import "./utils/fonts.scss";
+@import "./utils/vars.scss";
 @import "./utils/mixins.scss";
 
 #root {
   @include flex-row;
   @include flex-start;
+  background-color: $generalBackgroundColor;
 }

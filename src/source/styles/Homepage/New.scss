@@ -5,35 +5,30 @@
   @include posr;
   @include flex-column;
   @include flex-start-center;
-  width: 600px;
+  background: $backgroundColor;
+  width: 450px;
   height: calc(100vh - 80px);
   padding: 40px 0;
-  margin: 0px 40px;
+  margin: 0;
 
   &__h3 {
-    @include h4;
+    @include h6;
+    @include m5;
   }
 
   &__input {
-    @include default-input;
-    @include shadow;
-    @include b10;
+    @include underline-input;
     @include m20;
-    width: 440px;
+    width: 350px;
   }
 
   &__textarea {
-    @include default-input;
-    @include shadow;
-    @include b10;
-    resize: none;
-    height: 80px;
-    padding: 15px 20px;
-    width: 450px;
+    @include underline-textarea;
+    width: 350px;
   }
 
   &__button {
-    @include transparent-button;
+    @include default-button;
     @include m20;
     @include b18;
     width: 150px;

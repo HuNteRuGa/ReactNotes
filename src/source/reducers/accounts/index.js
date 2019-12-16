@@ -25,7 +25,6 @@ let initialState = {
 };
 
 export default (state = initialState, action = {}) => {
-  console.log(action);
   switch (action.type) {
     case INPUT_SIGNIN_USERNAME:
       return { ...state, signinError: 1, signinUsername: action.payload };

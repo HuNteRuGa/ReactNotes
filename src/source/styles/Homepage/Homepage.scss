@@ -4,58 +4,57 @@
 .left-menu {
   @include posf;
   @include pos0;
-  @include shadow;
   @include flex-column;
   @include flex-start-center;
-  width: 80px;
+  width: 50px;
   height: 100%;
   background: $backgroundColor;
   z-index: 10000;
 
   &__avatar {
     @include round;
-    @include square(60px);
+    @include square(40px);
     margin: 30px 0 20px 0;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    @include shadow;
   }
 
   &__links {
     @include posr;
     @include m20;
     @include flex-column;
-    @include flex-start;
+    @include flex-start-center;
     width: 100%;
 
     &__one-link {
       @include default-link;
-      @include square(80px);
-      @include m5;
+      @include square(50px);
       @include posr;
+      @include m5;
       display: block;
       text-align: center;
       line-height: 60px;
       background-color: $backgroundColor;
       background-position: center center;
-      background-size: 54px 54px;
+      background-size: 26px 26px;
       background-repeat: no-repeat;
       transition: 250ms;
 
       &:hover {
-        background-color: rgb(200, 200, 200);
+        background-color: $accentBackgroundColor;
       }
 
       &__submenu {
         @include posa;
-        @include shadow;
-        @include menu-font;
+        @include big-text-font;
+        height: 50px;
+        line-height: 50px;
         left: 100%;
         top: 0px;
-        width: 170px;
-        padding: 26.5px 10px;
-        background: $backgroundColor;
+        width: 140px;
+        padding: 0 10px;
+        background: $accentBackgroundColor;
         display: none;
       }
 
