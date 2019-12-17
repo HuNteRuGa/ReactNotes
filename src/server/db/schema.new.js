@@ -1,4 +1,5 @@
 const postgres = require("./index");
+const { validate, validateObject } = require("../utils/validator");
 
 const types = {
   int: { sql: "integer", js: "number" },
@@ -15,7 +16,7 @@ const validator = {
     required: true
   },
   type: {
-    type: "string",
+    type: "string", 
     required: true
   },
   required: {
@@ -47,67 +48,6 @@ const validator = {
   }
 };
 
-const validate = (key, value, validator, parents = []) => {
-  try {
-    const parentString = parents.reduce((prev, value) => (prev += `${value}.`), "");
-
-    let v = validator;
-
-    for (let parent of parents) {
-      v = v[parent].elems;
-    }
-    v = v[key];
-
-    if (!v) throw `Field ${parentString}${key} doesn't exist`;
-
-    if (value === null && v.required) throw `Field ${parentString}${key} is required`;
-
-    if (value === null) return 0;
-
-    if (typeof value !== v.type) throw `Field ${parentString}${key} must be a ${v.type}`;
-    if (v.type === "object") {
-      const elems = v.elems;
-      const arrayType = v.arrayType;
-      const minLength = v.minLength;
-
-      if (elems) {
-        for (elem in elems) {
-          try {
-            validate(elem, value[elem] || null, validator, [...parents, key]);
-          } catch (err) {
-            throw err;
-          }
-        }
-      }
-
-      if (minLength && value.length < minLength) {
-        throw `${parentString}${key} length must be at least ${minLength}`;
-      }
-
-      if (arrayType) {
-        for (let elem in value) {
-          if (typeof value[elem] !== arrayType)
-            throw `${parentString}${key}[${elem}] must be ${arrayType}`;
-        }
-      }
-    }
-  } catch (err) {
-    throw err;
-  }
-  return 0;
-};
-
-const validateObject = (array, validator) => {
-  try {
-    for (key in validator) {
-      validate(key, array[key] || null, validator);
-    }
-    return 0;
-  } catch (err) {
-    throw err;
-  }
-};
-
 const columnsSetter = (target, prop, value) => {
   try {
     validateObject(value, validator);
@@ -123,17 +63,20 @@ class Schema {
   constructor(table, ...columns) {
     if (columns[0][0]) columns = columns[0];
     this.table = table;
+
     this.columns = new Proxy(
       {},
       {
         set: columnsSetter
       }
     );
-    columns.map(col => {
+
+    for (let col of columns) {
       const title = col.title;
       try {
         validate("title", title, validator);
       } catch (err) {
+        consoleError(err);
         throw 0;
       }
 
@@ -144,7 +87,8 @@ class Schema {
       } catch (err) {
         throw 0;
       }
-    });
+    }
+
     this.create();
   }
   async select() {}
