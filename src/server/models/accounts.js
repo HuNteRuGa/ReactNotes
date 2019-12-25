@@ -70,7 +70,7 @@ module.exports = {
 
     const res = await schema.select({
       find: { username: body.username },
-      columns: ["username", "avatar", "date", "password", "salt"]
+      get: ["username", "avatar", "date", "password", "salt"]
     });
     if (res.length <= 0) throw -1; // Entered username isn't exist
     const hashedPassword = encryptPassword(res[0].salt, body.password.trim());
@@ -89,7 +89,7 @@ module.exports = {
     if (!body.jwt || !body.jwt.data || !body.jwt.signature) throw -1;
     const res = await schema.select({
       find: { username: body.jwt.data.username },
-      columns: ["salt"]
+      get: ["salt"]
     });
     if (res.length <= 0) throw -1;
     const signature = encryptPassword(process.env.JWT_SALT, JSON.stringify(data));

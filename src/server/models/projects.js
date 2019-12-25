@@ -25,11 +25,9 @@ try {
     },
     {
       title: "date",
-      type: "int"
+      type: "bigint"
     }
   );
-  // schema.insert({ username: "asd", password: "asd" });
-  // schema.drop();
 } catch (err) {}
 
 module.exports = {

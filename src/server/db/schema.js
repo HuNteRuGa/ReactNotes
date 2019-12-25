@@ -49,8 +49,7 @@ class Schema {
     // console.log(this.columns);
     this.create();
   }
-  async insert(...args) {
-    if (args[0] && typeof args[0] === "object") args = args[0];
+  async insert(args) {
     if (this.set && typeof this.set == "function") args = this.set(args);
 
     try {
@@ -167,7 +166,7 @@ module.exports = Schema;
 const getFindString = (validator, find) => {
   let FIND = "";
   for (let key in find) {
-    if (validator[key]) throw -200;
+    if (!validator[key]) throw -200;
     if (FIND !== "") FIND += " AND ";
     FIND += `${key}='${find[key]}'`;
   }
