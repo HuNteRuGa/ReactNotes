@@ -1,16 +1,17 @@
-const Schema = require("../db/schema.new");
+const Schema = require("../db/schema");
+
+let schema;
 
 try {
-  const schema = new Schema(
+  schema = new Schema(
     "table",
     {
       title: "id",
       type: "int",
       required: true,
-      unique: true,
+      unique: false,
       primary: true,
-      autoincrement: true,
-      foreignKey: { table: "asd", columns: ["id"] }
+      autoincrement: true
     },
     {
       title: "username",
@@ -21,8 +22,33 @@ try {
       title: "password",
       type: "text",
       required: true
+    },
+    {
+      title: "date",
+      type: "int"
     }
   );
+  // schema.insert({ username: "asd", password: "asd" });
+  // schema.drop();
 } catch (err) {}
 
-module.exports = {};
+module.exports = {
+  get: async req => {
+    const query = req.query;
+    const find = JSON.parse(query.find || "{}");
+    const get = JSON.parse(query.get || "[]");
+    return await schema.select({ find, get });
+  },
+  update: async req => {
+    const query = req.query;
+    const find = JSON.parse(query.find || "{}");
+    const set = JSON.parse(query.set || "{}");
+    return await schema.update({ find, set });
+  },
+  drop: async req => {
+    return await schema.drop();
+  },
+  insert: async req => {
+    return await schema.insert(req.query);
+  }
+};

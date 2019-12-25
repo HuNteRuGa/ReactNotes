@@ -1,242 +1,190 @@
 const postgres = require("./index");
+const { validate, validateObject } = require("../utils/validator");
+const { initValidator } = require("./validators");
+const { getProxy } = require("../utils/proxy");
 
-function getWhere(find, columns) {
-  let where = false;
+const types = {
+  int: { sql: "integer", js: "number" },
+  bigint: { sql: "bigint", js: "number" },
+  float: { sql: "real", js: "number" },
+  text: { sql: "text", js: "string" },
+  varchar: { sql: "varchar", js: "string" },
+  bool: { sql: "boolean", js: "boolean" }
+};
 
-  if (find) {
-    for (let key in find) {
-      if (columns[key] || key == "id") {
-        if (where) where += ` OR`;
-        else where = "WHERE";
+class Schema {
+  constructor(table, ...columns) {
+    if (columns[0][0]) columns = columns[0];
+    this.table = table;
 
-        let param = find[key];
-        param = key != "id" && columns[key].type == "string" ? `'${param}'` : param;
-        where += ` ${key}=${param}`;
-      } else {
-        consoleError(`column \`${key}\` doesn't exist`);
+    this.columns = getProxy();
+
+    this.validator = {};
+
+    for (let col of columns) {
+      const title = col.title;
+      try {
+        validate("title", title, initValidator);
+      } catch (err) {
+        consoleError(err);
+        throw 0;
+      }
+
+      try {
+        if (!types[col.type]) {
+          consoleError(`Data type "${col.type}" isn't exist`);
+          throw 0;
+        }
+        this.columns[title] = {
+          ...col
+        };
+        this.validator[title] = {
+          type: types[col.type].js,
+          required: col.autoincrement ? false : col.required
+        };
+      } catch (err) {
         throw 0;
       }
     }
-  }
-  return where;
-}
-
-module.exports = class {
-  constructor(table, columns) {
-    this.table = table;
-    this.columns = {};
-    for (let i = 0; i < columns.length; i++) {
-      let column = columns[i];
-      this.columns[column.title] = {
-        type: column.type || "number",
-        required: column.required || false
-      };
-    }
-    if (this.columns.id) this.columns.id.delete();
+    // console.log(this.columns);
     this.create();
   }
-  async select(params) {
-    if (!params) params = {};
+  async insert(...args) {
+    if (args[0] && typeof args[0] === "object") args = args[0];
+    if (this.set && typeof this.set == "function") args = this.set(args);
 
-    if (params.limit) params.limit = +params.limit;
-    if (params.start) params.start = +params.start;
-    if (!params.limit || typeof params.limit != "number") params.limit = 50;
-    if (!params.start || typeof params.start != "number") params.start = 0;
-
-    if (!params.order || typeof params.order != "string" || !this.columns[params.order])
-      params.order = "id";
-    if (params.desc == "true") params.desc = true;
-    if (params.desc == "false") params.desc = false;
-    if ((!params.desc && params.desc !== false) || typeof params.desc != "boolean")
-      params.desc = true;
-
-    let col = "";
-    if (!params.columns || params.columns.length == 0) col = "*";
-    else {
-      col = `id`;
-      params.columns.forEach(value => {
-        if (this.columns[value]) {
-          col += `, ${value}`;
-        } else {
-          consoleError(`column \`${key}\` doesn't exist`);
-          throw 0;
-        }
-      });
-    }
-
-    let where;
     try {
-      where = getWhere(params.find, this.columns);
+      validateObject(args, this.validator);
     } catch (err) {
-      throw 0;
+      consoleError(err);
+      throw -100;
     }
 
-    const sql = `SELECT ${col} FROM ${this.table} ${where ? where : ``} ORDER BY ${params.order}${
-      params.desc ? " DESC" : ""
-    } OFFSET ${params.start} LIMIT ${params.limit}`;
-    try {
-      let res = await postgres(sql);
-      if (this.get && typeof this.get == "function") res = res.map(value => this.get(value));
-      return res;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
-    }
-  }
-  async insert(params) {
-    if (this.set && typeof this.set == "function") params = this.set(params);
-
-    let columns = false;
-    let values = false;
-
-    for (let key in this.columns) {
-      if (this.columns[key].required && !params[key]) {
-        consoleError(
-          `\`${key}\` is \x1b[31mREQUIRED\x1b[0m to insert to the table \`${this.table}\``
-        );
-        throw 0;
-      } else {
-        if (typeof params[key] == this.columns[key].type) {
-          if (columns) {
-            columns += ", ";
-            values += ", ";
-          } else {
-            columns = "";
-            values = "";
-          }
-          columns += key;
-          values += this.columns[key].type == "string" ? `'${params[key]}'` : params[key];
-        } else {
-          if (!this.columns[key].required && typeof params[key] == "undefined") {
-            continue;
-          } else {
-            consoleError(`"${typeof params[key]}" is not required type of column \`${key}\``);
-            throw 0;
-          }
-        }
+    let COLUMNS = "";
+    let VALUES = "";
+    for (let key in args) {
+      if (COLUMNS !== "") {
+        COLUMNS += ", ";
+        VALUES += ", ";
       }
-    }
 
-    const sql = `INSERT INTO ${this.table} (${columns}) VALUES (${values}) RETURNING id`;
-    try {
-      let res = await postgres(sql);
-      return res[0];
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
+      COLUMNS += `${key}`;
+      VALUES += `'${args[key]}'`;
     }
+    return await sql(
+      `INSERT INTO public.${this.table} (${COLUMNS}) VALUES (${VALUES}) RETURNING id`
+    );
   }
-  async remove(params) {
-    let where;
-    try {
-      where = getWhere(params.find, this.columns);
-    } catch (err) {
-      throw 0;
-    }
+  async select(params = {}) {
+    const find = params.find || {};
+    const order = params.order || {};
+    const get = params.get || [];
+    const limit = params.limit || "ALL";
+    const offset = params.offset || 0;
 
-    const sql = `DELETE FROM ${this.table} ${where ? where : ``} RETURNING id`;
-    try {
-      let res = await postgres(sql);
-      return res;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
-    }
-  }
-  async truncate() {
-    const sql = `TRUNCATE ${this.table}`;
-    try {
-      let res = await postgres(sql);
-      return res;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
-    }
-  }
-  async update(params) {
-    if (this.set && typeof this.set == "function") params.set = this.set(params.set);
-    let where;
-    try {
-      where = getWhere(params.find, this.columns);
-    } catch (err) {
-      consoleError(`"WHERE" error`);
-      throw 0;
-    }
-    if (!params.set) {
-      consoleError(`You should write set parametres`);
-      throw 0;
-    }
+    const stringFIND = getFindString(this.validator, find);
 
-    let set = false;
-    for (let key in params.set) {
-      if (this.columns[key]) {
-        if (this.columns[key].type == typeof params.set[key]) {
-          if (set) {
-            set += ", ";
-          } else set = "";
-          set += `${key}=${
-            this.columns[key].type == "string" ? `'${params.set[key]}'` : params.set[key]
-          }`;
-        } else {
-          consoleError(`"${typeof params.set[key]}" is not required type of column \`${key}\``);
-          throw 0;
-        }
-      } else {
-        consoleError(`column \`${key}\` doesn't exist`);
-        throw 0;
-      }
-    }
-    const sql = `UPDATE ${this.table} SET ${set} ${where ? where : ``}`;
-    try {
-      await postgres(sql);
-      return 0;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
-    }
-  }
-  async create() {
-    let columns = "";
-    for (let key in this.columns) {
-      let column = this.columns[key];
-      let type;
-      if (column.type == "number") type = "integer";
-      else if (column.type == "string") type = "text";
-      else if (column.type == "boolean") type = "boolean";
-      else if (column.type == "json") type = "json";
-      else type == "text";
-      columns += `${key} ${type}${column.required ? ` NOT NULL` : ``},
-            `;
-    }
+    if (!order.by) order.by = Object.keys(this.columns)[0];
+    if (!order.desc) order.desc = true;
+    const stringORDER = ` ORDER BY ${order.by} ${order.desc ? "DESC" : ""}`;
 
-    const sql = `
-        CREATE TABLE if not exists public.${this.table}
-        (
-            id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 999999999 CACHE 1 ),
-            ${columns}CONSTRAINT ${this.table}_pkey PRIMARY KEY (id)
-        )`;
-    try {
-      await postgres(sql);
-      return 0;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
+    const stringLIMIT = ` LIMIT ${limit}`;
+    const stringOFFSET = ` OFFSET ${offset}`;
+
+    let GET = "";
+    for (let column of get) {
+      if (!this.validator[column]) throw -201;
+      if (GET !== "") GET += ", ";
+      GET += column;
     }
+    const stringGET = GET === "" ? "*" : GET;
+
+    const res = await sql(
+      `SELECT ${stringGET} FROM public.${this.table}${stringFIND}${stringORDER}${stringLIMIT}${stringOFFSET}`
+    );
+    return res.map(value => this.get(value));
   }
   async drop() {
-    const sql = `DROP TABLE ${this.table}`;
-    try {
-      await postgres(sql);
-      return 0;
-    } catch (err) {
-      consoleError(`\x1b[31merror:\x1b[0m ${err}\n\x1b[34mrequest:\x1b[0m ${sql}`);
-      throw 0;
+    sql(`DROP TABLE public.${this.table}`);
+  }
+  async update(params = {}) {
+    const find = params.find || {};
+    const set = this.set(params.set || {});
+
+    const stringFIND = getFindString(this.validator, find);
+
+    let SET = "";
+    for (let column in set) {
+      if (!this.validator[column]) throw -202;
+      validate(column, set[column], this.validator);
+      if (SET !== "") SET += ", ";
+      SET += `${column}='${set[column]}'`;
     }
+
+    return await sql(`UPDATE public.${this.table} SET ${SET}${stringFIND}`);
+  }
+  async create() {
+    let req = "";
+    let foreign = "";
+    let primaries = [];
+
+    for (const title in this.columns) {
+      const column = this.columns[title];
+      const type = types[column.type].sql;
+      const primary = column.primary;
+      const required = column.required || primary ? " NOT NULL" : "";
+      const unique = column.unique ? " UNIQUE" : "";
+      const autoincrement = column.autoincrement
+        ? " GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 999999999 CACHE 1 )"
+        : "";
+      const foreignKey = column.foreignKey;
+
+      req += `${title} ${type}${required}${unique}${autoincrement},\n`;
+
+      if (foreignKey) {
+        const references = foreignKey.columns.join(", ");
+        foreign += `FOREIGN KEY (${title}) REFERENCES ${column.foreignKey.table} (${references}) ON DELETE CASCADE,\n`;
+      }
+
+      if (primary) primaries.push(title);
+    }
+    primaries = primaries.join(", ");
+    let primary =
+      primaries.length > 0 ? `CONSTRAINT ${this.table}_pkey PRIMARY KEY (${primaries})` : "";
+
+    sql(`CREATE TABLE if not exists public.${this.table} \n(\n${req}${foreign}${primary}\n)`);
+  }
+  set(args) {
+    return args;
+  }
+  get(res) {
+    return res;
+  }
+}
+
+module.exports = Schema;
+
+const getFindString = (validator, find) => {
+  let FIND = "";
+  for (let key in find) {
+    if (validator[key]) throw -200;
+    if (FIND !== "") FIND += " AND ";
+    FIND += `${key}='${find[key]}'`;
+  }
+  return FIND === "" ? "" : ` WHERE ${FIND}`;
+};
+
+const sql = async request => {
+  try {
+    return await postgres(request);
+  } catch (err) {
+    consoleError(`${err.stack}\nSQL:\n${request}`);
+    return false;
   }
 };
 
-function consoleError(err) {
+const consoleError = err => {
   console.log("\n\x1b[41m", "            === ERROR ===            ", "\x1b[0m");
   console.log(err);
   console.log("\x1b[41m", "            === ERROR ===            ", "\x1b[0m\n");
-}
+};

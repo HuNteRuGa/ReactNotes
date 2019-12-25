@@ -4,28 +4,35 @@ const Schema = require("../db/schema");
 
 const schema = new Schema("accounts", [
   {
+    title: "id",
+    type: "int",
+    required: true,
+    primary: true,
+    autoincrement: true
+  },
+  {
     title: "username",
-    type: "string",
+    type: "text",
     required: true
   },
   {
     title: "password",
-    type: "string",
+    type: "text",
     required: true
   },
   {
     title: "salt",
-    type: "string",
+    type: "text",
     required: true
   },
   {
     title: "avatar",
-    type: "string",
+    type: "text",
     required: false
   },
   {
     title: "date",
-    type: "number",
+    type: "bigint",
     required: true
   }
 ]);
@@ -39,9 +46,9 @@ schema.set = params => {
 
   return {
     ...params,
-    date: date,
-    salt: salt,
-    password: password
+    date,
+    salt,
+    password
   };
 };
 

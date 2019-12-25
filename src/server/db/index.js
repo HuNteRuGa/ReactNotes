@@ -14,7 +14,9 @@ module.exports = sql => {
   let promise = new Promise((res, err) => {
     postgres.query(sql, (error, response) => {
       if (error) err(error);
-      else res(response.rows);
+      else {
+        res(response.rows);
+      }
     });
   });
   return promise;
