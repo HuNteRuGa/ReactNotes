@@ -1,5 +1,7 @@
 const Schema = require("../db/schema");
 
+const accounts = require("./accounts");
+
 let schema;
 
 try {
@@ -14,12 +16,18 @@ try {
       autoincrement: true
     },
     {
-      title: "username",
+      title: "account_id",
+      type: "int",
+      required: true,
+      foreign: { table: "accounts", column: "id" }
+    },
+    {
+      title: "title",
       type: "text",
       required: true
     },
     {
-      title: "password",
+      title: "description",
       type: "text",
       required: true
     },
@@ -30,7 +38,34 @@ try {
   );
 } catch (err) {}
 
+schema.set = params => {
+  const time = new Date();
+  const date = Math.round(time.getTime() / 1000);
+
+  return {
+    ...params,
+    date
+  };
+};
+
+schema.get = params => {
+  return {
+    ...params,
+    date: params.date * 1000
+  };
+};
+
 module.exports = {
+  create: async req => {
+    await accounts.verify(req);
+
+    const body = req.body;
+    const title = body.title;
+    const description = body.description;
+    if (title.trim().length <= 0) throw -10;
+    if (description.trim().length <= 0) throw -11;
+    return await schema.insert({ account_id: body.jwt.data.id, title, description });
+  },
   get: async req => {
     const query = req.query;
     const find = JSON.parse(query.find || "{}");

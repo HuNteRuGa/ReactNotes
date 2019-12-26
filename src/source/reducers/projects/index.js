@@ -6,7 +6,8 @@ import {
 
 let initialState = {
   inputProjectTitle: "",
-  inputProjectDescription: ""
+  inputProjectDescription: "",
+  projects: null
 };
 
 export default (state = initialState, action = {}) => {

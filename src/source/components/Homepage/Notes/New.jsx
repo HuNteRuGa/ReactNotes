@@ -29,7 +29,16 @@ export default props => {
         }}
         ref={textarea}
         value={props.projects.inputProjectDescription}></textarea>
-      <a className="new-project__button">Создать</a>
+      <a
+        className="new-project__button"
+        onClick={() =>
+          props.onCreateProject({
+            title: props.projects.inputProjectTitle,
+            description: props.projects.inputProjectDescription
+          })
+        }>
+        Создать
+      </a>
     </article>
   );
 };

@@ -59,17 +59,23 @@ class Schema {
       throw -100;
     }
 
-    let COLUMNS = "";
-    let VALUES = "";
-    for (let key in args) {
-      if (COLUMNS !== "") {
-        COLUMNS += ", ";
-        VALUES += ", ";
-      }
+    // let COLUMNS = "";
+    // let VALUES = "";
+    // for (let key in args) {
+    //   if (COLUMNS !== "") {
+    //     COLUMNS += ", ";
+    //     VALUES += ", ";
+    //   }
 
-      COLUMNS += `${key}`;
-      VALUES += `'${args[key]}'`;
-    }
+    //   COLUMNS += `${key}`;
+    //   VALUES += `'${args[key]}'`;
+    // }
+
+    const COLUMNS = Object.keys(args).join(", ");
+    const VALUES = Object.values(args)
+      .map(arg => `'${arg}'`)
+      .join(", ");
+    
     return await sql(
       `INSERT INTO public.${this.table} (${COLUMNS}) VALUES (${VALUES}) RETURNING id`
     );
@@ -80,6 +86,7 @@ class Schema {
     const get = params.get || [];
     const limit = params.limit || "ALL";
     const offset = params.offset || 0;
+    const join = params.join || false;
 
     const stringFIND = getFindString(this.validator, find);
 
@@ -98,8 +105,19 @@ class Schema {
     }
     const stringGET = GET === "" ? "*" : GET;
 
+    let JOIN = ` FROM public.${this.table}`;
+    if (join && join.type && join.table && join.get) {
+      if (join.type == "natural") {
+        let joinGet = "";
+        for (let column of join.get) {
+          joinGet += `, ${column}`;
+        }
+        JOIN = `${joinGet} NATURAL JOIN public.${join.table}`;
+      } else throw -204;
+    }
+
     const res = await sql(
-      `SELECT ${stringGET} FROM public.${this.table}${stringFIND}${stringORDER}${stringLIMIT}${stringOFFSET}`
+      `SELECT ${stringGET}${JOIN}${stringFIND}${stringORDER}${stringLIMIT}${stringOFFSET}`
     );
     return res.map(value => this.get(value));
   }

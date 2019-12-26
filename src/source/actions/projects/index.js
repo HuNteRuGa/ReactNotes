@@ -1,4 +1,5 @@
 import { INPUT_PROJECT_TITLE, INPUT_PROJECT_DESCRIPTION, CREATE_PROJECT } from "./types";
+import { createProjectApi } from "../../scripts/api/projects";
 
 export const inputProjectTitle = payload => ({
   type: INPUT_PROJECT_TITLE,
@@ -11,5 +12,6 @@ export const inputProjectDescription = payload => ({
 });
 
 export const createProject = async (dispatch, data) => {
-  dispatch({ type: CREATE_PROJECT, payload: data });
+  const res = await createProjectApi(data);
+  dispatch({ type: CREATE_PROJECT, payload: res });
 };
