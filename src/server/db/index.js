@@ -10,12 +10,12 @@ const postgres = new Postgres({
   password: config.postgres.password
 });
 
-module.exports = sql => {
-  let promise = new Promise((res, err) => {
-    postgres.query(sql, (error, response) => {
-      if (error) err(error);
+module.exports = async sql => {
+  let promise = new Promise((resolve, reject) => {
+    postgres.query(sql, (err, res) => {
+      if (err) reject(err);
       else {
-        res(response.rows);
+        resolve(res.rows);
       }
     });
   });
