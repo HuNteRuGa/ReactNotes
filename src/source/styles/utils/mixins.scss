@@ -3,6 +3,11 @@
   font: 17px $textFont;
 }
 
+@mixin medium-text-font {
+  color: $textColor;
+  font: 20px $textFont;
+}
+
 @mixin big-text-font {
   color: $textColor;
   font: 22px $textFont;
@@ -191,6 +196,12 @@
   justify-content: space-around;
   align-items: flex-start;
   align-content: flex-start;
+}
+
+@mixin flex-around-center {
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
 }
 
 @mixin flex-wrap {
