@@ -47,6 +47,12 @@
     width: calc(100% - 60px);
   }
 
+  &__description {
+    @include sh6;
+    margin: 5px 0 20px 30px;
+    width: calc(100% - 60px);
+  }
+
   &__project-cards {
     @include posr;
     @include flex-row;

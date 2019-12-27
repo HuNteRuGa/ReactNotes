@@ -51,7 +51,10 @@ schema.set = params => {
 schema.get = params => {
   return {
     ...params,
-    date: params.date * 1000
+    date: params.date * 1000,
+    tasks: [],
+    inProcess: [],
+    done: []
   };
 };
 
@@ -71,6 +74,11 @@ module.exports = {
     const find = JSON.parse(query.find || "{}");
     const get = JSON.parse(query.get || "[]");
     return await schema.select({ find, get });
+  },
+  getByJwt: async req => {
+    await accounts.verify(req);
+    const body = req.body;
+    return await schema.select({ find: { account_id: body.jwt.data.id }, limit: 10 });
   },
   update: async req => {
     const query = req.query;

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import Homepage from "../../components/Homepage/Notes/New";
+import New from "../../components/Homepage/Notes/New";
 
 import { inputProjectTitle, inputProjectDescription, createProject } from "../../actions/projects";
 
@@ -20,5 +20,5 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const store = connect(mapStateToProps, mapDispatchToProps)(Homepage);
+const store = connect(mapStateToProps, mapDispatchToProps)(New);
 export default store;

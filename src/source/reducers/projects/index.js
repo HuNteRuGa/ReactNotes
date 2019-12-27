@@ -1,7 +1,9 @@
 import {
   INPUT_PROJECT_TITLE,
   INPUT_PROJECT_DESCRIPTION,
-  CREATE_PROJECT
+  CREATE_PROJECT,
+  BEFORE_LOAD_PROJECTS,
+  LOAD_PROJECTS
 } from "../../actions/projects/types";
 
 let initialState = {
@@ -18,6 +20,10 @@ export default (state = initialState, action = {}) => {
       return { ...state, inputProjectDescription: action.payload };
     case CREATE_PROJECT:
       return { ...state };
+    case BEFORE_LOAD_PROJECTS:
+      return { ...state, projects: [] };
+    case LOAD_PROJECTS:
+      return { ...state, projects: action.payload.res };
     default:
       return { ...state };
   }

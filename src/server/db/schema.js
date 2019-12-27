@@ -59,23 +59,11 @@ class Schema {
       throw -100;
     }
 
-    // let COLUMNS = "";
-    // let VALUES = "";
-    // for (let key in args) {
-    //   if (COLUMNS !== "") {
-    //     COLUMNS += ", ";
-    //     VALUES += ", ";
-    //   }
-
-    //   COLUMNS += `${key}`;
-    //   VALUES += `'${args[key]}'`;
-    // }
-
     const COLUMNS = Object.keys(args).join(", ");
     const VALUES = Object.values(args)
       .map(arg => `'${arg}'`)
       .join(", ");
-    
+
     return await sql(
       `INSERT INTO public.${this.table} (${COLUMNS}) VALUES (${VALUES}) RETURNING id`
     );
