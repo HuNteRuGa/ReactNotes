@@ -15,7 +15,7 @@ export default props => {
         <Card title="В процессе" tasks={props.process} />
         <Card title="Сделано" tasks={props.done} />
       </div>
-      <Link className="one-project__open" to="/project/12">
+      <Link className="one-project__open" to={`/project/${props.number}`}>
         Перейти
       </Link>
     </section>

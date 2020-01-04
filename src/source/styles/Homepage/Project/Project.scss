@@ -1,0 +1,100 @@
+@import "../../utils/vars.scss";
+@import "../../utils/mixins.scss";
+
+.project {
+  @include posr;
+  @include flex-row;
+  @include flex-around;
+  @include flex-wrap;
+  @include p20;
+  width: calc(100% - 500px);
+  height: calc(100% - 40px);
+  margin: 0 0 0 20px;
+}
+
+.project-info {
+  @include posr;
+  @include flex-column;
+  @include flex-start;
+  width: 100%;
+
+  &__title {
+    @include h4;
+    @include m20;
+  }
+
+  &__description {
+    @include sh6;
+  }
+}
+
+.project-cards {
+  @include posr;
+  @include flex-row;
+  @include flex-between;
+  margin: 30px 0 0 0;
+  width: 100%;
+}
+
+.cards-list {
+  @include posr;
+  @include flex-column;
+  @include flex-start;
+  width: calc(100% / 3 - 20px);
+
+  &__header {
+    @include sh5;
+    @include flex-row;
+    @include flex-center-center;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__button {
+    @include square(32px);
+    @include block;
+    margin: 0 0 0 10px;
+    text-decoration: none;
+    background-color: transparent;
+    background-size: 100% 100%;
+    background-image: url("/static/img/add.svg");
+    cursor: pointer;
+  }
+}
+
+.project-card {
+  @include posr;
+  @include flex-column;
+  @include flex-start-center;
+  @include m20;
+  @include b5;
+  padding: 20px 30px;
+  width: calc(100% - 60px);
+  background: $backgroundColor;
+
+  &__title {
+    @include medium-text-font;
+  }
+
+  &__description {
+    @include text-font;
+    margin: 10px 0 0 0;
+  }
+
+  &__input-title {
+    @include underline-input;
+    width: 100%;
+  }
+
+  &__textarea-description {
+    @include underline-textarea;
+    @include m20;
+    width: 100%;
+  }
+
+  &__button-add {
+    @include default-button;
+    @include b5;
+    width: 190px;
+  }
+}

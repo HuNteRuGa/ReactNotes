@@ -15,8 +15,8 @@ export default props => {
   return (
     <article className="project-list--little">
       <h3 className="project-list--little__h3">Проекты</h3>
-      {projects.map(project => {
-        return <Project key={project.id} title={project.title} />;
+      {projects.map((project, index) => {
+        return <Project key={project.id} title={project.title} id={project.id} number={index} />;
       })}
     </article>
   );

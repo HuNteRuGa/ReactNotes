@@ -15,10 +15,12 @@ export default props => {
   return (
     <article className="project-list">
       <h1 className="project-list__h1">Проекты</h1>
-      {projects.map(project => {
+      {projects.map((project, index) => {
         return (
           <Project
             key={project.id}
+            id={project.id}
+            number={index}
             title={project.title}
             description={project.description}
             tasks={project.tasks}

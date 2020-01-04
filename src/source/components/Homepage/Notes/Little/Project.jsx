@@ -6,7 +6,7 @@ export default props => {
   return (
     <section className="project-list--little__one-project one-project--little">
       <h3 className="one-project--little__title">{title}</h3>
-      <Link className="one-project--little__open" to="/project/12">
+      <Link className="one-project--little__open" to={`/project/${props.number}`}>
         Перейти
       </Link>
     </section>

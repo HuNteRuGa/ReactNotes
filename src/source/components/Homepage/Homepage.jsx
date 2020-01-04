@@ -5,6 +5,7 @@ import Notes from "../../containers/Homepage/Notes";
 import LittleNotes from "../../containers/Homepage/Little/Notes";
 import New from "../../containers/Homepage/New";
 import Menu from "./Menu/Menu";
+import Project from "../../containers/Homepage/Project/Project";
 
 import "../../styles/Homepage/Homepage.scss";
 
@@ -20,6 +21,7 @@ class Homepage extends Component {
           </Route>
           <Route path="/project/:id">
             <LittleNotes />
+            <Project />
           </Route>
         </Switch>
       </>

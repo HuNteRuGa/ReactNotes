@@ -35,6 +35,10 @@
   position: fixed;
 }
 
+@mixin block {
+  display: block;
+}
+
 @mixin shadow {
   box-shadow: 0 0 15px rgba(140, 140, 140, 0.3);
 }
@@ -198,8 +202,26 @@
   align-content: flex-start;
 }
 
+@mixin flex-start-around {
+  justify-content: flex-start;
+  align-content: space-around;
+  align-items: space-around;
+}
+
+@mixin flex-start-between {
+  justify-content: flex-start;
+  align-content: space-between;
+  align-items: space-around;
+}
+
 @mixin flex-around-center {
   justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+@mixin flex-between-center {
+  justify-content: space-between;
   align-items: center;
   align-content: center;
 }
