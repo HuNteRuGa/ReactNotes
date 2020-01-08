@@ -148,16 +148,13 @@
       transparent 70%
     );
   }
-
-  // &:hover::after {
-  //   left: -200px;
-  // }
 }
 
 @mixin default-link {
   text-decoration: none;
   cursor: pointer;
   color: $linkColor;
+  font: 19px $linkFont;
 }
 
 @mixin flex-row {

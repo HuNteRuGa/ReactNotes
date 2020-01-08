@@ -1,8 +1,6 @@
 import { connect } from "react-redux";
 
-import "../../../styles/Homepage/Project/Project.scss";
-
-import Project from "../../../components/Homepage/Notes/Project/Project";
+import Tasks from "../../../components/Homepage/Notes/Project/Tasks";
 
 import {
   inputTaskTitle,
@@ -58,5 +56,5 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-const store = connect(mapStateToProps, mapDispatchToProps)(Project);
+const store = connect(mapStateToProps, mapDispatchToProps)(Tasks);
 export default store;

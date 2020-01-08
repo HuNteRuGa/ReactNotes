@@ -4,11 +4,34 @@ import { useParams } from "react-router-dom";
 
 import resizeTextarea from "../../../../scripts/utils/resizeTextarea";
 
+import Tasks from "./Tasks";
+
 export default props => {
   const { id } = useParams();
 
-  const [showNewTask, setShowNewTask] = useState(false);
-  const addTask = () => setShowNewTask(true);
+  const isShowAll = allShow => {
+    let showAll = true;
+    Object.values(allShow).forEach(value => {
+      if (!value) showAll = false;
+    });
+    return showAll;
+  };
+
+  const getCardsClass = (show, allShow) => {
+    let flag = "--visible";
+    if (isShowAll(allShow)) flag = "--visible-all";
+    return `project-cards__list cards-list${show ? ` cards-list${flag}` : ""}`;
+  };
+
+  const getCardClass = show => {
+    return `project-list__card project-card${show ? " project-card--visible" : ""}`;
+  };
+
+  const getShowAllClass = (show, allShow) => {
+    return `cards-list__show-all${
+      show && !isShowAll(allShow) ? " cards-list__show-all--visible" : ""
+    }`;
+  };
 
   useEffect(() => {
     if (props.projects.projects === null) {
@@ -18,6 +41,12 @@ export default props => {
   });
   const projects = props.projects.projects || [];
   const project = projects[id];
+
+  const show = {
+    tasks: props.projects.showTasks,
+    inProcess: props.projects.showInProcess,
+    done: props.projects.showDone
+  };
 
   if (!project) {
     return <h1>No such project</h1>;
@@ -29,22 +58,34 @@ export default props => {
           <h2 className="project-info__description">{project.description}</h2>
         </section>
         <section className="project__cards project-cards">
-          <section className="project-cards__tasks cards-list">
+          <section className={getCardsClass(show.tasks, show)}>
             <h3 className="cards-list__header">
-              Задания<a className="cards-list__button" onClick={() => addTask()}></a>
+              Задания<a className="cards-list__button" onClick={() => props.onShowAddTask()}></a>
             </h3>
-            {showNewTask ? (
-              <section className="project-list__card project-card">
+            <a className={getShowAllClass(show.tasks, show)} onClick={() => props.onShowAll()}>
+              Показать все
+            </a>
+            {props.projects.showAddTask ? (
+              <section className={getCardClass(show.tasks)}>
                 <input
                   className="project-card__input-title"
+                  onChange={e => props.onInputTaskTitle(e.target.value)}
+                  value={props.projects.inputTaskTitle}
                   type="text"
                   placeholder="Название дела"
                 />
                 <textarea
-                  onInput={e => resizeTextarea(e.target)}
                   className="project-card__textarea-description"
+                  onInput={e => resizeTextarea(e.target)}
+                  onChange={e => props.onInputTaskDescription(e.target.value)}
+                  value={props.projects.inputTaskDescription}
                   placeholder="Подробная информация"></textarea>
-                <a className="project-card__button-add">Добавить</a>
+                <div className="project-card__buttons-container">
+                  <a className="project-card__button-add">Добавить</a>
+                  <a className="project-card__button-hide" onClick={() => props.onHideAddTask()}>
+                    Скрыть
+                  </a>
+                </div>
               </section>
             ) : (
               ""
@@ -56,10 +97,10 @@ export default props => {
               </div>
             </section>
           </section>
-          <section className="project-cards__in-process cards-list">
+          <section className={getCardsClass(show.inProcess, show)}>
             <h3 className="cards-list__header">В процессе</h3>
           </section>
-          <section className="project-cards__done cards-list">
+          <section className={getCardsClass(show.done, show)}>
             <h3 className="cards-list__header">Завершено</h3>
           </section>
         </section>

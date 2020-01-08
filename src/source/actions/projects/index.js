@@ -1,10 +1,18 @@
 import {
   INPUT_PROJECT_TITLE,
   INPUT_PROJECT_DESCRIPTION,
+  INPUT_TASK_TITLE,
+  INPUT_TASK_DESCRIPTION,
   CREATE_PROJECT,
   BEFORE_LOAD_PROJECTS,
   LOAD_PROJECTS,
-  ADD_TASK
+  ADD_TASK,
+  SHOW_TASKS,
+  SHOW_IN_PROCESS,
+  SHOW_DONE,
+  SHOW_ALL,
+  SHOW_ADD_TASK,
+  HIDE_ADD_TASK
 } from "./types";
 import { createProjectApi, loadProjectsApi, addTaskApi } from "../../scripts/api/projects";
 
@@ -18,9 +26,49 @@ export const inputProjectDescription = payload => ({
   payload: payload
 });
 
+export const inputTaskTitle = payload => ({
+  type: INPUT_TASK_TITLE,
+  payload: payload
+});
+
+export const inputTaskDescription = payload => ({
+  type: INPUT_TASK_DESCRIPTION,
+  payload: payload
+});
+
 export const beforeLoadProjects = () => ({
   type: BEFORE_LOAD_PROJECTS,
   payload: null
+});
+
+export const showTasks = () => ({
+  type: SHOW_TASKS,
+  paylaod: null
+});
+
+export const showInProcess = () => ({
+  type: SHOW_IN_PROCESS,
+  paylaod: null
+});
+
+export const showDone = () => ({
+  type: SHOW_DONE,
+  paylaod: null
+});
+
+export const showAll = () => ({
+  type: SHOW_ALL,
+  payload: null
+});
+
+export const showAddTask = () => ({
+  type: SHOW_ADD_TASK,
+  paylaod: null
+});
+
+export const hideAddTask = () => ({
+  type: HIDE_ADD_TASK,
+  paylaod: null
 });
 
 export const createProject = async (dispatch, data) => {

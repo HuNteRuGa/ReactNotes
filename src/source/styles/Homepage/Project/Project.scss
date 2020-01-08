@@ -31,16 +31,33 @@
 .project-cards {
   @include posr;
   @include flex-row;
-  @include flex-between;
+  @include flex-start;
   margin: 30px 0 0 0;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .cards-list {
   @include posr;
   @include flex-column;
   @include flex-start;
+  opacity: 0;
+  padding: 0 10px;
   width: calc(100% / 3 - 20px);
+  order: 1;
+  transition: 400ms;
+
+  &--visible-all {
+    opacity: 1;
+    flex-shrink: 0;
+  }
+
+  &--visible {
+    order: 0;
+    opacity: 1;
+    width: 100%;
+    flex-shrink: 0;
+  }
 
   &__header {
     @include sh5;
@@ -60,6 +77,18 @@
     background-image: url("/static/img/add.svg");
     cursor: pointer;
   }
+
+  &__show-all {
+    @include default-link;
+    @include m5;
+    text-align: center;
+    width: 100%;
+    display: none;
+
+    &--visible {
+      display: block;
+    }
+  }
 }
 
 .project-card {
@@ -71,13 +100,17 @@
   padding: 20px 30px;
   width: calc(100% - 60px);
   background: $backgroundColor;
+  overflow: hidden;
+  transition: 400ms;
 
   &__title {
     @include medium-text-font;
+    width: 100%;
   }
 
   &__description {
     @include text-font;
+    width: 100%;
     margin: 10px 0 0 0;
   }
 
@@ -90,11 +123,40 @@
     @include underline-textarea;
     @include m20;
     width: 100%;
+    transition: 400ms;
+  }
+
+  &__buttons-container {
+    @include flex-row;
+    @include flex-between;
+    @include flex-wrap;
+    width: 100%;
+    transition: 400ms;
   }
 
   &__button-add {
     @include default-button;
     @include b5;
-    width: 190px;
+    width: 170px;
+  }
+
+  &__button-hide {
+    @include default-button;
+    @include b5;
+    width: 170px;
+  }
+
+  &--visible {
+    @include flex-start-center;
+
+    .project-card {
+      &__input-title,
+      &__textarea-description {
+        width: 500px;
+      }
+      &__buttons-container {
+        width: 500px;
+      }
+    }
   }
 }
