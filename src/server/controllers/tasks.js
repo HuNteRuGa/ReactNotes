@@ -1,10 +1,10 @@
-const projects = require("../models/projects");
+const tasks = require("../models/tasks");
 
 module.exports = async (req, res, next) => {
   const func = req.params.func;
-  if (func && projects[func]) {
+  if (func && tasks[func]) {
     try {
-      const response = await projects[func](req);
+      const response = await tasks[func](req);
       //console.log(response);
       res.send({ res: response || false });
     } catch (err) {

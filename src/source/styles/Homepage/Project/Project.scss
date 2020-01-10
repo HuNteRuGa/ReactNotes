@@ -42,20 +42,22 @@
   @include flex-column;
   @include flex-start;
   opacity: 0;
-  padding: 0 10px;
-  width: calc(100% / 3 - 20px);
-  order: 1;
-  transition: 400ms;
+  padding: 0;
+  width: 0px;
+  overflow: hidden;
+  transition: 350ms;
 
   &--visible-all {
     opacity: 1;
+    width: calc(100% / 3 - 20px);
+    padding: 0 10px;
     flex-shrink: 0;
   }
 
   &--visible {
-    order: 0;
     opacity: 1;
-    width: 100%;
+    width: calc(100% - 20px);
+    padding: 0 10px;
     flex-shrink: 0;
   }
 
@@ -81,13 +83,9 @@
   &__show-all {
     @include default-link;
     @include m5;
+    @include block;
     text-align: center;
     width: 100%;
-    display: none;
-
-    &--visible {
-      display: block;
-    }
   }
 }
 

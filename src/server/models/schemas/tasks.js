@@ -4,7 +4,7 @@ let schema;
 
 try {
   schema = new Schema(
-    "table",
+    "tasks",
     {
       title: "id",
       type: "int",
@@ -14,10 +14,10 @@ try {
       autoincrement: true
     },
     {
-      title: "account_id",
+      title: "project_id",
       type: "int",
       required: true,
-      foreign: { table: "accounts", column: "id" }
+      foreign: { table: "table", column: "id" }
     },
     {
       title: "title",
@@ -30,6 +30,11 @@ try {
       required: true
     },
     {
+      title: "type",
+      type: "text",
+      required: true
+    },
+    {
       title: "date",
       type: "bigint"
     }
@@ -38,7 +43,7 @@ try {
 
 schema.set = params => {
   const time = new Date();
-  const date = Math.round(time.getTime() / 1000);
+  const date = Math.round(time.getTime());
 
   return {
     ...params,
@@ -48,8 +53,7 @@ schema.set = params => {
 
 schema.get = params => {
   return {
-    ...params,
-    date: params.date * 1000
+    ...params
   };
 };
 

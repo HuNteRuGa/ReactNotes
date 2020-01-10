@@ -85,6 +85,8 @@
     @include sh6;
     @include m5;
     font: 19px $headerFont;
+    width: 100%;
+    text-align: center;
   }
 
   &__task {

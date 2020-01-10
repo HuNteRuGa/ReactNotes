@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   if (func && accounts[func]) {
     try {
       const response = await accounts[func](req);
-      console.log(response);
+      //console.log(response);
       res.send({ res: response || false });
     } catch (err) {
       console.log(err);

@@ -11,7 +11,8 @@ import {
   SHOW_DONE,
   SHOW_ALL,
   SHOW_ADD_TASK,
-  HIDE_ADD_TASK
+  HIDE_ADD_TASK,
+  ADD_TASK
 } from "../../actions/projects/types";
 
 let initialState = {
@@ -60,6 +61,8 @@ export default (state = initialState, action = {}) => {
       return { ...state, projects: [] };
     case LOAD_PROJECTS:
       return { ...state, projects: action.payload.res };
+    case ADD_TASK:
+      return { ...state };
     default:
       return { ...state };
   }

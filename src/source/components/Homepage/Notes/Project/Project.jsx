@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
-import resizeTextarea from "../../../../scripts/utils/resizeTextarea";
-
 import Tasks from "./Tasks";
+import NewTask from "../../../../containers/Homepage/Project/newTask";
 
 export default props => {
   const { id } = useParams();
@@ -23,14 +22,15 @@ export default props => {
     return `project-cards__list cards-list${show ? ` cards-list${flag}` : ""}`;
   };
 
-  const getCardClass = show => {
-    return `project-list__card project-card${show ? " project-card--visible" : ""}`;
-  };
-
-  const getShowAllClass = (show, allShow) => {
-    return `cards-list__show-all${
-      show && !isShowAll(allShow) ? " cards-list__show-all--visible" : ""
-    }`;
+  const getShowLink = (show, allShow, showFunc) => {
+    const hide = !isShowAll(allShow) && show;
+    return (
+      <a
+        className="cards-list__show-all"
+        onClick={hide ? () => props.onShowAll() : () => showFunc()}>
+        {hide ? "Показать все" : "Развернуть"}
+      </a>
+    );
   };
 
   useEffect(() => {
@@ -62,46 +62,16 @@ export default props => {
             <h3 className="cards-list__header">
               Задания<a className="cards-list__button" onClick={() => props.onShowAddTask()}></a>
             </h3>
-            <a className={getShowAllClass(show.tasks, show)} onClick={() => props.onShowAll()}>
-              Показать все
-            </a>
-            {props.projects.showAddTask ? (
-              <section className={getCardClass(show.tasks)}>
-                <input
-                  className="project-card__input-title"
-                  onChange={e => props.onInputTaskTitle(e.target.value)}
-                  value={props.projects.inputTaskTitle}
-                  type="text"
-                  placeholder="Название дела"
-                />
-                <textarea
-                  className="project-card__textarea-description"
-                  onInput={e => resizeTextarea(e.target)}
-                  onChange={e => props.onInputTaskDescription(e.target.value)}
-                  value={props.projects.inputTaskDescription}
-                  placeholder="Подробная информация"></textarea>
-                <div className="project-card__buttons-container">
-                  <a className="project-card__button-add">Добавить</a>
-                  <a className="project-card__button-hide" onClick={() => props.onHideAddTask()}>
-                    Скрыть
-                  </a>
-                </div>
-              </section>
-            ) : (
-              ""
-            )}
-            <section className="project-list__card project-card">
-              <h4 className="project-card__title">Card titlte</h4>
-              <div className="project-card__description">
-                Card description... adsaf dsa fdsa gyaksd fdsa kfghas djkf gsdak gfjksa
-              </div>
-            </section>
+            {getShowLink(show.tasks, show, props.onShowTasks)}
+            {props.projects.showAddTask ? <NewTask id={project.id} /> : ""}
           </section>
           <section className={getCardsClass(show.inProcess, show)}>
             <h3 className="cards-list__header">В процессе</h3>
+            {getShowLink(show.inProcess, show, props.onShowInProcess)}
           </section>
           <section className={getCardsClass(show.done, show)}>
             <h3 className="cards-list__header">Завершено</h3>
+            {getShowLink(show.done, show, props.onShowDone)}
           </section>
         </section>
       </article>
