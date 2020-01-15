@@ -23,7 +23,7 @@ export default props => {
             number={index}
             title={project.title}
             description={project.description}
-            tasks={project.tasks}
+            tasks={project.task}
             process={project.inProcess}
             done={project.done}
           />

@@ -12,18 +12,30 @@ import {
   SHOW_ALL,
   SHOW_ADD_TASK,
   HIDE_ADD_TASK,
-  ADD_TASK
+  ADD_TASK,
+  SHOW_EDIT_PROJECT_TITLE,
+  SHOW_EDIT_PROJECT_DESCRIPTION,
+  SAVE_PROJECT_TITLE,
+  SAVE_PROJECT_DESCRIPTION,
+  INPUT_EDIT_PROJECT_TITLE,
+  INPUT_EDIT_PROJECT_DESCRIPTION,
+  SET_OPENED_PROJECT_NUMBER
 } from "../../actions/projects/types";
 
-let initialState = {
+const initialState = {
   inputProjectTitle: "",
   inputProjectDescription: "",
   inputTaskTitle: "",
   inputTaskDescription: "",
+  inputEditProjectTitle: "",
+  inputEditProjectDescription: "",
   showTasks: true,
   showInProcess: true,
   showDone: true,
   showAddTask: false,
+  showEditProjectTitle: false,
+  showEditProjectDescription: false,
+  openedProjectNumber: null,
   projects: null
 };
 
@@ -33,7 +45,13 @@ const initialShow = {
   showDone: false
 };
 
-export default (state = initialState, action = {}) => {
+export default (originalState = initialState, action = {}) => {
+  const state = { ...originalState };
+
+  let project = null;
+  if (state.openedProjectNumber && state.projects[state.openedProjectNumber])
+    project = state.projects[state.openedProjectNumber];
+
   switch (action.type) {
     case INPUT_PROJECT_TITLE:
       return { ...state, inputProjectTitle: action.payload };
@@ -63,6 +81,35 @@ export default (state = initialState, action = {}) => {
       return { ...state, projects: action.payload.res };
     case ADD_TASK:
       return { ...state };
+    case SHOW_EDIT_PROJECT_TITLE:
+      return {
+        ...state,
+        showEditProjectTitle: true,
+        inputEditProjectTitle: project.title
+      };
+    case SHOW_EDIT_PROJECT_DESCRIPTION:
+      return {
+        ...state,
+        showEditProjectDescription: true,
+        inputEditProjectDescription: project.description
+      };
+    case SAVE_PROJECT_TITLE:
+      if (action.payload.res) {
+        state.projects[state.openedProjectNumber].title = state.inputEditProjectTitle;
+        return { ...state, showEditProjectTitle: false };
+      } else return { ...state };
+    case SAVE_PROJECT_DESCRIPTION:
+      if (action.payload.res) {
+        state.projects[state.openedProjectNumber].description = state.inputEditProjectDescription;
+        return { ...state, showEditProjectDescription: false };
+      } else return { ...state };
+    case INPUT_EDIT_PROJECT_TITLE:
+      return { ...state, inputEditProjectTitle: action.payload };
+    case INPUT_EDIT_PROJECT_DESCRIPTION:
+      return { ...state, inputEditProjectDescription: action.payload };
+    case SET_OPENED_PROJECT_NUMBER:
+      if (!state.projects[action.payload]) return { ...state };
+      else return { ...state, openedProjectNumber: action.payload };
     default:
       return { ...state };
   }

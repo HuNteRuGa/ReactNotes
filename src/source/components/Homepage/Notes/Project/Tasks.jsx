@@ -1,7 +1,7 @@
 import React from "react";
 
 export default props => {
-  reutrn(
+  return (
     <>
       {props.tasks.map((task, index) => {
         return (

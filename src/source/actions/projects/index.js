@@ -12,9 +12,22 @@ import {
   SHOW_DONE,
   SHOW_ALL,
   SHOW_ADD_TASK,
-  HIDE_ADD_TASK
+  HIDE_ADD_TASK,
+  SHOW_EDIT_PROJECT_TITLE,
+  SHOW_EDIT_PROJECT_DESCRIPTION,
+  SAVE_PROJECT_TITLE,
+  SAVE_PROJECT_DESCRIPTION,
+  INPUT_EDIT_PROJECT_DESCRIPTION,
+  INPUT_EDIT_PROJECT_TITLE,
+  SET_OPENED_PROJECT_NUMBER
 } from "./types";
-import { createProjectApi, loadProjectsApi, addTaskApi } from "../../scripts/api/projects";
+import {
+  createProjectApi,
+  loadProjectsApi,
+  addTaskApi,
+  saveProjectTitleApi,
+  saveProjectDescriptionApi
+} from "../../scripts/api/projects";
 
 export const inputProjectTitle = payload => ({
   type: INPUT_PROJECT_TITLE,
@@ -85,3 +98,38 @@ export const addTask = async (dispatch, data) => {
   const res = await addTaskApi(data);
   dispatch({ type: ADD_TASK, paylaod: res });
 };
+
+export const showEditProjectTitle = () => ({
+  type: SHOW_EDIT_PROJECT_TITLE,
+  payload: null
+});
+
+export const showEditProjectDescription = () => ({
+  type: SHOW_EDIT_PROJECT_DESCRIPTION,
+  payload: null
+});
+
+export const inputEditProjectTitle = data => ({
+  type: INPUT_EDIT_PROJECT_TITLE,
+  payload: data
+});
+
+export const inputEditProjectDescription = data => ({
+  type: INPUT_EDIT_PROJECT_DESCRIPTION,
+  payload: data
+});
+
+export const saveProjectTitle = async (dispatch, data) => {
+  const res = await saveProjectTitleApi(data);
+  dispatch({ type: SAVE_PROJECT_TITLE, payload: res });
+};
+
+export const saveProjectDescription = async (dispatch, data) => {
+  const res = await saveProjectDescriptionApi(data);
+  dispatch({ type: SAVE_PROJECT_DESCRIPTION, payload: res });
+};
+
+export const setOpenedProjectNumber = data => ({
+  type: SET_OPENED_PROJECT_NUMBER,
+  payload: data
+});

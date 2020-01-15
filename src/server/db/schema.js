@@ -179,7 +179,10 @@ class Schema {
 
     let SET = "";
     for (let column in set) {
-      if (!this.validator[column]) throw -202;
+      if (!this.validator[column]) {
+        consoleError(`Column \`${column}\` doesn't exist`);
+        throw -202;
+      }
       validate(column, set[column], this.validator);
       if (SET !== "") SET += ", ";
       SET += `${column}='${set[column]}'`;

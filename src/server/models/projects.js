@@ -34,7 +34,7 @@ module.exports = {
     const find = JSON.parse(query.find || "{}");
     const get = JSON.parse(query.get || "[]");
     return await schema.select({
-      find,
+      find: { account_id: 1 },
       get: ["id", "title", "description", "account_id", "date"],
       join: {
         type: "left",
@@ -44,20 +44,64 @@ module.exports = {
       }
     });
   },
+  updateTitleById: async function(req) {
+    const body = req.body;
+    const id = body.id;
+    await this.verify(body.jwt, id);
+
+    const title = body.title;
+
+    if (title.trim() === "") throw -40;
+
+    return await schema.update({ find: { id }, set: { title } });
+  },
+  updateDescriptionById: async function(req) {
+    const body = req.body;
+    const id = body.id;
+    await this.verify(body.jwt, id);
+
+    const description = body.description;
+
+    if (description.trim() === "") throw -40;
+
+    return await schema.update({ find: { id }, set: { description } });
+  },
   getByJwt: async req => {
     await accounts.verify(req);
     const body = req.body;
-    return await schema.select({
+    let res = await schema.select({
       find: { account_id: body.jwt.data.id },
-      get: ["id", "title", "description", "account_id"],
+      get: ["id", "title", "description", "account_id", "date"],
       limit: 10,
       join: {
-        type: "inner",
+        type: "left",
         table: "tasks",
         equal: { table: "id", tasks: "project_id" },
-        get: ["id", "title", "description", "date"]
+        get: ["id", "title", "description", "date", "type"]
       }
     });
+    res = res.map(value => {
+      const response = {
+        id: value.id,
+        title: value.title,
+        description: value.description,
+        account_id: value.account_id,
+        task: [],
+        inProcess: [],
+        done: []
+      };
+      const tasks = value.tasks;
+      for (let key in tasks) {
+        const task = tasks[key];
+        const type = task.type;
+        console.log(task);
+        if (type === "task" || type === "inProcess" || type === "done") {
+          response[type].push(task);
+        } else throw -14;
+      }
+      return response;
+    });
+    return res;
   },
   update: async req => {
     const query = req.query;

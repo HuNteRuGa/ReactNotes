@@ -11,9 +11,9 @@ export default props => {
       <h3 className="one-project__title">{props.title}</h3>
       <h4 className="one-project__description">{props.description}</h4>
       <div className="one-project__project-cards project-cards">
-        <Card title="Задания" tasks={props.tasks} />
-        <Card title="В процессе" tasks={props.process} />
-        <Card title="Сделано" tasks={props.done} />
+        <Card key="1" title="Задания" tasks={props.tasks} />
+        <Card key="2" title="В процессе" tasks={props.process} />
+        <Card key="3" title="Сделано" tasks={props.done} />
       </div>
       <Link className="one-project__open" to={`/project/${props.number}`}>
         Перейти

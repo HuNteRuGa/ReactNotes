@@ -15,7 +15,14 @@ import {
   showDone,
   showAll,
   showAddTask,
-  hideAddTask
+  hideAddTask,
+  showEditProjectTitle,
+  showEditProjectDescription,
+  saveProjectTitle,
+  saveProjectDescription,
+  inputEditProjectTitle,
+  inputEditProjectDescription,
+  setOpenedProjectNumber
 } from "../../../actions/projects";
 
 const mapStateToProps = state => ({
@@ -55,6 +62,27 @@ const mapDispatchToProps = dispatch => ({
   },
   onAddTask: project => {
     addTask(dispatch, project);
+  },
+  onShowEditProjectTitle: () => {
+    dispatch(showEditProjectTitle());
+  },
+  onShowEditProjectDescription: () => {
+    dispatch(showEditProjectDescription());
+  },
+  onSaveProjectTitle: data => {
+    saveProjectTitle(dispatch, data);
+  },
+  onSaveProjectDescription: data => {
+    saveProjectDescription(dispatch, data);
+  },
+  onInputEditProjectTitle: data => {
+    dispatch(inputEditProjectTitle(data));
+  },
+  onInputEditProjectDescription: data => {
+    dispatch(inputEditProjectDescription(data));
+  },
+  onSetOpenedProjectNumber: data => {
+    dispatch(setOpenedProjectNumber(data));
   }
 });
 

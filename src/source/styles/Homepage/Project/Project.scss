@@ -19,12 +19,38 @@
   width: 100%;
 
   &__title {
+    @include flex-row;
+    @include flex-start-center;
     @include h4;
     @include m20;
   }
 
   &__description {
+    @include flex-row;
+    @include flex-start-center;
     @include sh6;
+  }
+
+  &__edit,
+  &__save {
+    @include square(24px);
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-size: 100% 100%;
+    margin: 0 0 0 15px;
+    cursor: pointer;
+
+    &--big {
+      @include square(32px);
+    }
+  }
+
+  &__edit {
+    background-image: url("/static/img/edit.svg");
+  }
+  &__save {
+    background-image: url("/static/img/save.svg");
   }
 }
 
