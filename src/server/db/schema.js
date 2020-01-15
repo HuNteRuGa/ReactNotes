@@ -65,9 +65,10 @@ class Schema {
       .map(arg => `'${arg}'`)
       .join(", ");
 
-    return await sql(
-      `INSERT INTO public.${this.table} (${COLUMNS}) VALUES (${VALUES}) RETURNING id`
+    const res = await sql(
+      `INSERT INTO public.${this.table} (${COLUMNS}) VALUES (${VALUES}) RETURNING *`
     );
+    return res.map(value => this.get(value));
   }
   async select(params = {}) {
     const find = params.find || {};
