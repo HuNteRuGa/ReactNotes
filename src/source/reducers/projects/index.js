@@ -81,7 +81,7 @@ export default (originalState = initialState, action = {}) => {
       return { ...state, projects: action.payload.res };
     case ADD_TASK:
       if (action.payload.res) {
-        state.projects[state.openedProjectNumber].task.unshift(action.payload.res);
+        state.projects[state.openedProjectNumber].task.unshift(action.payload.res[0]);
         return { ...state, showAddTask: false, inputTaskTitle: "", inputTaskDescription: "" };
       } else return { ...state };
     case SHOW_EDIT_PROJECT_TITLE:
