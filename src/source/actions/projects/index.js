@@ -96,7 +96,7 @@ export const loadProjects = async dispatch => {
 
 export const addTask = async (dispatch, data) => {
   const res = await addTaskApi(data);
-  dispatch({ type: ADD_TASK, paylaod: res });
+  dispatch({ type: ADD_TASK, payload: res });
 };
 
 export const showEditProjectTitle = () => ({

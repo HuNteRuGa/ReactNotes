@@ -47,7 +47,6 @@ class Schema {
         throw 0;
       }
     }
-    // console.log(this.columns);
     this.create();
   }
   async insert(args) {
@@ -133,7 +132,6 @@ class Schema {
       }
     }
     const sqlStr = `SELECT ${stringGET}${JOIN}${stringFIND}${stringORDER}${stringLIMIT}${stringOFFSET}`;
-    console.log(`\n${sqlStr}\n`);
     let res = await sql(sqlStr);
 
     if (

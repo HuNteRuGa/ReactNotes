@@ -33,16 +33,40 @@ module.exports = {
     const query = req.query;
     const find = JSON.parse(query.find || "{}");
     const get = JSON.parse(query.get || "[]");
-    return await schema.select({
+    let res = await schema.select({
       find: { account_id: 1 },
       get: ["id", "title", "description", "account_id", "date"],
       join: {
         type: "left",
         table: "tasks",
         equal: { table: "id", tasks: "project_id" },
-        get: ["id", "title", "description", "date"]
+        get: ["id", "title", "description", "date", "type"]
       }
     });
+    res = res.map(value => {
+      const response = {
+        id: value.id,
+        title: value.title,
+        description: value.description,
+        account_id: value.account_id,
+        task: [],
+        inProcess: [],
+        done: []
+      };
+      const tasks = value.tasks;
+      for (let key in tasks) {
+        const task = tasks[key];
+        const type = task.type;
+        if (type === "task" || type === "inProcess" || type === "done") {
+          response[type].push(task);
+        } else throw -14;
+      }
+      response.task.sort(compareById);
+      response.inProcess.sort(compareById);
+      response.done.sort(compareById);
+      return response;
+    });
+    return res;
   },
   updateTitleById: async function(req) {
     const body = req.body;
@@ -99,6 +123,9 @@ module.exports = {
           response[type].push(task);
         } else throw -14;
       }
+      response.task.sort(compareById);
+      response.inProcess.sort(compareById);
+      response.done.sort(compareById);
       return response;
     });
     return res;
@@ -116,3 +143,5 @@ module.exports = {
     return await schema.insert(req.query);
   }
 };
+
+const compareById = (a, b) => b.id - a.id;
